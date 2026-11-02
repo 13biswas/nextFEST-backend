@@ -30,8 +30,4 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(
-    `Server running on port ${PORT}. Go to http://localhost:${PORT}/api/events to see the API in action.`,
-  ),
-);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
