@@ -20,7 +20,7 @@ const authorizeGroupCreator = require("../middlewares/authorizeGroupCreator");
 
 const router = express.Router();
 
-// POST http://localhost:3113/api/groups
+// POST https://nextfest-backend.onrender.com/api/groups
 router.post(
   "/",
   authHandler,
@@ -31,16 +31,16 @@ router.post(
   createGroup,
 );
 
-// GET http://localhost:3113/api/groups
+// GET https://nextfest-backend.onrender.com/api/groups
 router.get("/", getGroups);
 
-// GET http://localhost:3113/api/groups/myGroups
+// GET https://nextfest-backend.onrender.com/api/groups/myGroups
 router.get("/myGroups", authHandler, getMyGroups);
 
-// GET http://localhost:3113/api/groups/:id
+// GET https://nextfest-backend.onrender.com/api/groups/:id
 router.get("/:id", authHandler, getGroup);
 
-// PUT http://localhost:3113/api/groups/:id
+// PUT https://nextfest-backend.onrender.com/api/groups/:id
 router.put(
   "/:id",
   authHandler,
@@ -51,10 +51,10 @@ router.put(
   updateGroup,
 );
 
-// DELETE http://localhost:3113/api/groups/:id
+// DELETE https://nextfest-backend.onrender.com/api/groups/:id
 router.delete("/:id", authHandler, deleteGroup);
 
-// POST http://localhost:3113/api/groups/:id/documents
+// POST https://nextfest-backend.onrender.com/api/groups/:id/documents
 router.post(
   "/:id/documents",
   authHandler,
@@ -63,7 +63,7 @@ router.post(
   addGroupDocuments,
 );
 
-// PUT http://localhost:3113/api/groups/:id/documents/:documentId
+// PUT https://nextfest-backend.onrender.com/api/groups/:id/documents/:documentId
 router.put(
   "/:id/documents/:documentId",
   authHandler,
@@ -72,7 +72,7 @@ router.put(
   replaceGroupDocument,
 );
 
-// DELETE http://localhost:3113/api/groups/:id/documents/:documentId
+// DELETE https://nextfest-backend.onrender.com/api/groups/:id/documents/:documentId
 router.delete(
   "/:id/documents/:documentId",
   authHandler,
@@ -80,7 +80,7 @@ router.delete(
   deleteGroupDocument,
 );
 
-// GET http://localhost:3113/api/groups/:id/documents/:documentId/download
+// GET https://nextfest-backend.onrender.com/api/groups/:id/documents/:documentId/download
 router.get("/:id/documents/:documentId/download", downloadGroupDocument);
 
 module.exports = router;

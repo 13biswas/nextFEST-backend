@@ -33,7 +33,7 @@ const authorizeEventCreator = require("../middlewares/authorizeEventCreator");
 
 const router = express.Router();
 
-// POST http://localhost:3113/api/events
+// POST https://nextfest-backend.onrender.com/api/events
 router.post(
   "/",
   authHandler,
@@ -41,43 +41,43 @@ router.post(
   createEvent,
 );
 
-// GET http://localhost:3113/api/events
+// GET https://nextfest-backend.onrender.com/api/events
 router.get("/", getEvents);
 
-// GET http://localhost:3113/api/myEvents
+// GET https://nextfest-backend.onrender.com/api/events/myEvents
 router.get("/myEvents", authHandler, getMyEvents);
 
-// GET http://localhost:3113/api/manage-attendance
+// GET https://nextfest-backend.onrender.com/api/events/manage-attendance
 router.get("/manage-attendance", authHandler, getManageableEvents);
 
-// GET http://localhost:3113/api/events/payment/status?session_id=...
+// GET https://nextfest-backend.onrender.com/api/events/payment/status?session_id=...
 router.get("/payment/status", authHandler, getPaymentStatus);
 
-// POST http://localhost:3113/api/events/payment/cancel
+// POST https://nextfest-backend.onrender.com/api/events/payment/cancel
 router.post("/payment/cancel", authHandler, cancelPendingRegistration);
 
-// GET http://localhost:3113/api/events/:id/check-in
+// POST https://nextfest-backend.onrender.com/api/events/:id/check-in
 router.post("/:id/check-in", authHandler, checkInAttendee);
 
-// GET http://localhost:3113/api/recommended
+// GET https://nextfest-backend.onrender.com/api/events/recommended
 router.get("/recommended", authHandler, getRecommendedEvents);
 
-// GET http://localhost:3113/api/events/:id
+// GET https://nextfest-backend.onrender.com/api/events/:id
 router.get("/:id", getEvent);
 
-// GET http://localhost:3113/api/events/:id/related
+// GET https://nextfest-backend.onrender.com/api/events/:id/related
 router.get("/:id/related", getRelatedEvents);
 
-// GET http://localhost:3113/api/events/:id/reaction
+// GET https://nextfest-backend.onrender.com/api/events/:id/reaction
 router.get("/:id/reaction", authHandler, getMyEventReaction);
 
-// PUT http://localhost:3113/api/events/:id/reaction
+// PUT https://nextfest-backend.onrender.com/api/events/:id/reaction
 router.put("/:id/reaction", authHandler, setEventReaction);
 
-// POST http://localhost:3113/api/events/:id/register
+// POST https://nextfest-backend.onrender.com/api/events/:id/register
 router.post("/:id/register", authHandler, registerForEvent);
 
-// PUT http://localhost:3113/api/events/:id
+// PUT https://nextfest-backend.onrender.com/api/events/:id
 router.put(
   "/:id",
   authHandler,
@@ -85,10 +85,10 @@ router.put(
   updateEvent,
 );
 
-// DELETE http://localhost:3113/api/events/:id
+// DELETE https://nextfest-backend.onrender.com/api/events/:id
 router.delete("/:id", authHandler, deleteEvent);
 
-// POST http://localhost:3113/api/events/:id/documents
+// POST https://nextfest-backend.onrender.com/api/events/:id/documents
 router.post(
   "/:id/documents",
   authHandler,
@@ -97,7 +97,7 @@ router.post(
   addEventDocuments,
 );
 
-// PUT http://localhost:3113/api/events/:id/documents/:documentId
+// PUT https://nextfest-backend.onrender.com/api/events/:id/documents/:documentId
 router.put(
   "/:id/documents/:documentId",
   authHandler,
@@ -106,7 +106,7 @@ router.put(
   replaceEventDocument,
 );
 
-// DELETE http://localhost:3113/api/events/:id/documents/:documentId
+// DELETE https://nextfest-backend.onrender.com/api/events/:id/documents/:documentId
 router.delete(
   "/:id/documents/:documentId",
   authHandler,
@@ -114,7 +114,7 @@ router.delete(
   deleteEventDocument,
 );
 
-// GET http://localhost:3113/api/events/:id/documents/:documentId/download
+// GET https://nextfest-backend.onrender.com/api/events/:id/documents/:documentId/download
 router.get("/:id/documents/:documentId/download", downloadEventDocument);
 
 module.exports = router;

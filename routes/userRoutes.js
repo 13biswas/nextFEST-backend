@@ -13,13 +13,13 @@ const {
 
 const router = express.Router();
 
-// GET http://localhost:3113/api/me
+// GET https://nextfest-backend.onrender.com/api/users/me
 router.get("/me", authHandler, getMyProfile);
 
-// PUT http://localhost:3113/api/me
+// PUT https://nextfest-backend.onrender.com/api/users/me
 router.put("/me", authHandler, updateMyProfile);
 
-// PUT http://localhost:3113/api/me/profile-image
+// PUT https://nextfest-backend.onrender.com/api/users/me/profile-image
 router.put(
   "/me/profile-image",
   authHandler,
