@@ -271,7 +271,6 @@ const requestEmailVerification = async (req, res, next) => {
     user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     await user.save();
 
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     const backendUrl = process.env.BACKEND_URL || "http://localhost:3113";
 
     const verificationUrl = `${backendUrl}/api/auth/verify-email?token=${encodeURIComponent(rawToken)}`;
@@ -300,7 +299,7 @@ const requestEmailVerification = async (req, res, next) => {
 
 const verifyEmail = async (req, res, next) => {
   try {
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
     const rawToken = req.query.token;
 
     if (typeof rawToken !== "string" || !rawToken) {
@@ -371,7 +370,7 @@ const requestPasswordReset = async (req, res, next) => {
       user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000);
       await user.save();
 
-      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+      const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
       const resetUrl = `${frontendUrl}/reset-password?token=${encodeURIComponent(rawToken)}`;
 
       try {
