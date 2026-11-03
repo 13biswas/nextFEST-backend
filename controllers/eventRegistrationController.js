@@ -57,7 +57,7 @@ const registerForEvent = async (req, res, next) => {
   } = req.body || {};
 
   const requiredFields = {
-    fullName,
+    fullName, // fullName: fullName and so on for the other fields
     email,
     phoneNumber,
     gender,
@@ -191,6 +191,9 @@ const registerForEvent = async (req, res, next) => {
     };
 
     // Payment related operations are performed here
+    // for events with a price greater than 0.
+    // For free events,
+    // the registration is created directly without involving Stripe.
     if (event.price > 0) {
       let registration = await EventRegistration.findOne({
         event: event._id,
@@ -217,6 +220,7 @@ const registerForEvent = async (req, res, next) => {
         await registration.save();
       }
 
+      // Create a new Stripe checkout session for the registration
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         managed_payments: {
@@ -265,6 +269,9 @@ const registerForEvent = async (req, res, next) => {
       });
     }
 
+    // For free events,
+    // we can directly add the user to the attendees list and
+    // create a registration with a voucher.
     updatedEvent = await Event.findOneAndUpdate(
       {
         _id: req.params.id,
@@ -353,7 +360,7 @@ const registerForEvent = async (req, res, next) => {
     ) {
       return res.status(409).json({
         success: false,
-        message: "You are already registered for this event. xxxxxxxxx",
+        message: "You are already registered for this event.",
       });
     }
 
@@ -393,13 +400,19 @@ const stripeWebhook = async (req, res) => {
 
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
+
     if (session.payment_status !== "paid") return res.json({ received: true });
 
     const registration = await EventRegistration.findById(
       session.metadata.registrationId,
     );
+
     // Idempotency: Stripe may retry
-    if (!registration || registration.paymentStatus === "paid") {
+    if (
+      !registration ||
+      registration.paymentStatus === "paid" ||
+      registration.paymentStatus === "failed"
+    ) {
       return res.json({ received: true });
     }
 
@@ -414,7 +427,45 @@ const stripeWebhook = async (req, res) => {
       { $addToSet: { attendees: registration.user } },
       { new: true },
     );
-    // If !event the event is full: refund via stripe.refunds.create({ payment_intent: session.payment_intent }) and return.
+
+    // If the registration limit has been reached during the payment process,
+    // due to concurrent registrations,
+    // we need to refund the payment and mark the registration as failed.
+    if (!event) {
+      try {
+        const paymentIntentId =
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id;
+
+        if (!paymentIntentId) {
+          throw new Error(
+            `No payment intent found for Checkout session ${session.id}`,
+          );
+        }
+
+        const refund = await stripe.refunds.create(
+          { payment_intent: paymentIntentId },
+          { idempotencyKey: `event-full-refund-${session.id}` },
+        );
+
+        registration.paymentStatus = "failed";
+        await registration.save();
+
+        console.info(
+          `Could not complete registration ${registration._id}; refund ${refund.id} status: ${refund.status}`,
+        );
+      } catch (error) {
+        console.error(
+          `Could not refund payment for registration ${registration._id}:`,
+          error,
+        );
+
+        return res.status(500).json({ received: false });
+      }
+
+      return res.json({ received: true });
+    }
 
     const voucherCode = await assignVoucherToRegistration(registration);
 
